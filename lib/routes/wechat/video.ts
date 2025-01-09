@@ -48,7 +48,7 @@ async function handler(ctx) {
                         if (!media) {
                             return `${profile.contact.nickname} - ${objectDesc.description}`;
                         }
-                        return `<iframe width="640" height="360" src="${link}" /><img src="${media.coverUrl}" alt="${objectDesc.description}" /><br />${objectDesc.description}`;
+                        return `<img src="${media.coverUrl}" alt="${objectDesc.description}" /><br />${objectDesc.description}`;
                     })(),
                     pubDate: new Date(createtime * 1000).toUTCString(),
                     link,
