@@ -41,10 +41,14 @@ async function handler(ctx) {
                 const { id, objectNonceId, objectDesc, createtime } = feed;
                 const nid = objectNonceId.split('_')[0];
                 const link = `${domain}/web/pages/video.html?oid=${id}&nid=${nid}`;
+                const media = objectDesc.media[0];
+                if (media.mediaType === 9) {
+                    // 过滤掉直播
+                    return null;
+                }
                 return {
                     title: objectDesc.description,
                     description: (() => {
-                        const media = objectDesc.media[0];
                         if (!media) {
                             return `${profile.contact.nickname} - ${objectDesc.description}`;
                         }
@@ -56,7 +60,7 @@ async function handler(ctx) {
                     comments: [],
                 };
             });
-        })(),
+        })().filter(Boolean),
     };
     return result;
 }
