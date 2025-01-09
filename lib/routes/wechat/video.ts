@@ -27,7 +27,7 @@ async function handler(ctx) {
     }
     const profile = data.data;
     const result = {
-        title: profile.contact.nickname,
+        title: `${profile.contact.nickname} 的视频号`,
         link: `${domain}/web/pages/author.html?username=${username}`,
         description: `${profile.contact.nickname} 的视频号主页`,
         image: profile.contact.headUrl,
@@ -40,6 +40,7 @@ async function handler(ctx) {
             return profile.object.map((feed) => {
                 const { id, objectNonceId, objectDesc, createtime } = feed;
                 const nid = objectNonceId.split('_')[0];
+                const link = `${domain}/web/pages/video.html?oid=${id}&nid=${nid}`;
                 return {
                     title: objectDesc.description,
                     description: (() => {
@@ -47,10 +48,10 @@ async function handler(ctx) {
                         if (!media) {
                             return `${profile.contact.nickname} - ${objectDesc.description}`;
                         }
-                        return `<img src="${media.coverUrl}" alt="${objectDesc.description}" /><br />${objectDesc.description}`;
+                        return `<iframe width="640" height="360" src="${link}" /><img src="${media.coverUrl}" alt="${objectDesc.description}" /><br />${objectDesc.description}`;
                     })(),
                     pubDate: new Date(createtime * 1000).toUTCString(),
-                    link: `${domain}/web/pages/video.html?oid=${id}&nid=${nid}`,
+                    link,
                     author: profile.contact.nickname,
                     comments: [],
                 };
