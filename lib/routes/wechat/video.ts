@@ -40,7 +40,7 @@ async function handler(ctx) {
             return profile.object.map((feed) => {
                 const { id, objectNonceId, objectDesc, createtime } = feed;
                 const nid = objectNonceId.split('_')[0];
-                const link = `${domain}/web/pages/video.html?oid=${id}&nid=${nid}`;
+                const link = `${domain}/web/pages/video.html?oid=${id}&nid=${nid}&embed=1`;
                 const media = objectDesc.media[0];
                 if (media.mediaType === 9) {
                     // 过滤掉直播
