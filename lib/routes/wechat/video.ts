@@ -48,6 +48,7 @@ async function handler(ctx) {
                 }
                 return {
                     title: objectDesc.description,
+                    image: media.coverUrl,
                     description: (() => {
                         if (!media) {
                             return `${profile.contact.nickname} - ${objectDesc.description}`;
