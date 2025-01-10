@@ -51,7 +51,7 @@ async function handler(ctx) {
                     const link = `${domain}/player/?oid=${id}&nid=${nid}&embed=1`;
                     const media = objectDesc.media[0];
                     return {
-                        uid: id,
+                        guid: id,
                         title: objectDesc.description,
                         image: media.coverUrl,
                         description: (() => {
