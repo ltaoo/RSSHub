@@ -29,7 +29,7 @@ async function handler(ctx) {
     const profile = data.data;
     const result: Data = {
         title: `${profile.contact.nickname} 的视频号`,
-        link: `${domain}/web/pages/author.html?username=${username}`,
+        link: `${domain}/author/?username=${username}`,
         description: `${profile.contact.nickname} 的视频号主页`,
         image: profile.contact.headUrl,
         logo: profile.contact.headUrl,
@@ -48,7 +48,7 @@ async function handler(ctx) {
                 .map((feed) => {
                     const { id, objectNonceId, objectDesc, createtime } = feed;
                     const nid = objectNonceId.split('_')[0];
-                    const link = `${domain}/web/pages/video.html?oid=${id}&nid=${nid}&embed=1`;
+                    const link = `${domain}/player/?oid=${id}&nid=${nid}&embed=1`;
                     const media = objectDesc.media[0];
                     return {
                         uid: id,
