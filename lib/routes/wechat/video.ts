@@ -17,7 +17,7 @@ export const route: Route = {
     handler,
 };
 async function handler(ctx) {
-    const domain = 'http://47.116.113.118:2024';
+    const domain = 'https://wxchannel.funzm.com';
     const username = ctx.req.param('username');
     const next_marker = ctx.req.param('next_marker') || '';
     const response = await got(`${domain}/api/author/profile?username=${username}&next_marker=${next_marker}`, {});
