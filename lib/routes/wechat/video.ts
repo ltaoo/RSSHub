@@ -1,4 +1,4 @@
-import { Route, ViewType } from '@/types';
+import { Data, Route, ViewType } from '@/types';
 import got from '@/utils/got';
 import logger from '@/utils/logger';
 
@@ -19,14 +19,15 @@ export const route: Route = {
 async function handler(ctx) {
     const domain = 'http://47.116.113.118:2024';
     const username = ctx.req.param('username');
-    const response = await got(`${domain}/api/author/profile?username=${username}`, {});
+    const next_marker = ctx.req.param('next_marker') || '';
+    const response = await got(`${domain}/api/author/profile?username=${username}&next_marker=${next_marker}`, {});
     const data = response.data as { code: number; msg: string; data: AuthorProfileResp };
     if (data.code) {
         logger.error(JSON.stringify(data.data));
         throw new Error(`Got error code ${data.code} while fetching: ${data.msg}`);
     }
     const profile = data.data;
-    const result = {
+    const result: Data = {
         title: `${profile.contact.nickname} 的视频号`,
         link: `${domain}/web/pages/author.html?username=${username}`,
         description: `${profile.contact.nickname} 的视频号主页`,
@@ -37,31 +38,36 @@ async function handler(ctx) {
             if (!Array.isArray(profile.object)) {
                 return [];
             }
-            return profile.object.map((feed) => {
-                const { id, objectNonceId, objectDesc, createtime } = feed;
-                const nid = objectNonceId.split('_')[0];
-                const link = `${domain}/web/pages/video.html?oid=${id}&nid=${nid}&embed=1`;
-                const media = objectDesc.media[0];
-                if (media.mediaType === 9) {
-                    // 过滤掉直播
-                    return null;
-                }
-                return {
-                    title: objectDesc.description,
-                    image: media.coverUrl,
-                    description: (() => {
-                        if (!media) {
-                            return `${profile.contact.nickname} - ${objectDesc.description}`;
-                        }
-                        return `<img src="${media.coverUrl}" alt="${objectDesc.description}" /><br />${objectDesc.description}`;
-                    })(),
-                    pubDate: new Date(createtime * 1000).toUTCString(),
-                    link,
-                    author: profile.contact.nickname,
-                    comments: [],
-                };
-            });
-        })().filter(Boolean),
+            const list: Data['item'] = profile.object
+                .filter((feed) => {
+                    const { objectDesc } = feed;
+                    const media = objectDesc.media[0];
+                    /** 过滤掉直播记录 */
+                    return media.mediaType !== 9;
+                })
+                .map((feed) => {
+                    const { id, objectNonceId, objectDesc, createtime } = feed;
+                    const nid = objectNonceId.split('_')[0];
+                    const link = `${domain}/web/pages/video.html?oid=${id}&nid=${nid}&embed=1`;
+                    const media = objectDesc.media[0];
+                    return {
+                        uid: id,
+                        title: objectDesc.description,
+                        image: media.coverUrl,
+                        description: (() => {
+                            if (!media) {
+                                return `${profile.contact.nickname} - ${objectDesc.description}`;
+                            }
+                            return `<img src="${media.coverUrl}" alt="${objectDesc.description}" /><br />${objectDesc.description}`;
+                        })(),
+                        pubDate: new Date(createtime * 1000).toUTCString(),
+                        link,
+                        author: profile.contact.nickname,
+                        comments: [],
+                    };
+                });
+            return list;
+        })(),
     };
     return result;
 }
