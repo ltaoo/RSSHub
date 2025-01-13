@@ -816,7 +816,7 @@ const calculateValue = () => {
             refreshToken: envs.YOUTUBE_REFRESH_TOKEN,
         },
         wechat: {
-            key: envs.WECHAT_TOKEN,
+            token: envs.WECHAT_TOKEN,
         },
         zhihu: {
             cookies: envs.ZHIHU_COOKIES,
