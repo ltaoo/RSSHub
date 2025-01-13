@@ -381,6 +381,9 @@ export type Config = {
         clientSecret?: string;
         refreshToken?: string;
     };
+    wechat: {
+        token: string;
+    };
     zhihu: {
         cookies?: string;
     };
@@ -811,6 +814,9 @@ const calculateValue = () => {
             clientId: envs.YOUTUBE_CLIENT_ID,
             clientSecret: envs.YOUTUBE_CLIENT_SECRET,
             refreshToken: envs.YOUTUBE_REFRESH_TOKEN,
+        },
+        wechat: {
+            key: envs.WECHAT_TOKEN,
         },
         zhihu: {
             cookies: envs.ZHIHU_COOKIES,

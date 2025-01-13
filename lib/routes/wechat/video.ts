@@ -1,6 +1,7 @@
 import { Data, Route, ViewType } from '@/types';
 import got from '@/utils/got';
 import logger from '@/utils/logger';
+import { config } from '@/config';
 
 export const route: Route = {
     path: '/user/video/:username',
@@ -9,7 +10,12 @@ export const route: Route = {
     example: '/wechat/user/video/v2_060000231003b20faec8c4e48e1dc3ddcd03ec3cb077bb11b3c6c9a42ee3cea8073a64e6e2bd@finder',
     parameters: { uid: '作者 username，格式为 v2_xxx@finder' },
     features: {
-        requireConfig: false,
+        requireConfig: [
+            {
+                name: 'TOKEN',
+                description: 'The token request wechat_api',
+            },
+        ],
     },
     radar: [],
     name: '视频号作者详情',
@@ -20,7 +26,7 @@ async function handler(ctx) {
     const domain = 'https://wxchannel.funzm.com';
     const username = ctx.req.param('username');
     const next_marker = ctx.req.param('next_marker') || '';
-    const response = await got(`${domain}/api/author/profile?username=${username}&next_marker=${next_marker}`, {});
+    const response = await got(`${domain}/api/author/profile?username=${username}&next_marker=${next_marker}&token=${config.wechat.token}`, {});
     const data = response.data as { code: number; msg: string; data: AuthorProfileResp };
     if (data.code) {
         logger.error(JSON.stringify(data.data));
