@@ -26,7 +26,7 @@ async function handler(ctx) {
     const domain = 'https://wxchannel.funzm.com';
     const username = ctx.req.param('username');
     const next_marker = ctx.req.param('next_marker') || '';
-    const response = await got(`${domain}/api/author/profile?username=${username}&next_marker=${next_marker}&token=${config.wechat.token}`, {});
+    const response = await got(`${domain}/api/media/list?username=${username}&next_marker=${next_marker}&token=${config.wechat.token}`, {});
     const data = response.data as { code: number; msg: string; data: AuthorProfileResp };
     if (data.code) {
         logger.error(JSON.stringify(data.data));
