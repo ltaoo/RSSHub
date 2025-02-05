@@ -238,9 +238,6 @@ export type Config = {
         instance?: string;
         token?: string;
     };
-    misskey: {
-        accessToken?: string;
-    };
     mox: {
         cookie: string;
     };
@@ -383,6 +380,9 @@ export type Config = {
         clientId?: string;
         clientSecret?: string;
         refreshToken?: string;
+    };
+    wechat: {
+        token: string;
     };
     zhihu: {
         cookies?: string;
@@ -672,9 +672,6 @@ const calculateValue = () => {
             instance: envs.MINIFLUX_INSTANCE || 'https://reader.miniflux.app',
             token: envs.MINIFLUX_TOKEN || '',
         },
-        misskey: {
-            accessToken: envs.MISSKEY_ACCESS_TOKEN,
-        },
         mox: {
             cookie: envs.MOX_COOKIE,
         },
@@ -817,6 +814,9 @@ const calculateValue = () => {
             clientId: envs.YOUTUBE_CLIENT_ID,
             clientSecret: envs.YOUTUBE_CLIENT_SECRET,
             refreshToken: envs.YOUTUBE_REFRESH_TOKEN,
+        },
+        wechat: {
+            token: envs.WECHAT_TOKEN,
         },
         zhihu: {
             cookies: envs.ZHIHU_COOKIES,
